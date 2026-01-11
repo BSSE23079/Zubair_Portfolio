@@ -1,50 +1,53 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", function () {
+    //    1. PROJECT FILTERING
+    let filterButtons = document.querySelectorAll(".filter-btn");
+    let projectCards = document.querySelectorAll(".project-card");
 
-    /* Project Filtering */
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('.project-card');
+    filterButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
 
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const filter = btn.dataset.filter;
-
-            projectCards.forEach(card => {
-                card.style.display =
-                    filter === 'all' || card.dataset.category === filter
-                        ? 'flex'
-                        : 'none';
+            // Remove active class from all buttons
+            filterButtons.forEach(function (btn) {
+                btn.classList.remove("active");
             });
+
+            // Add active class to clicked button
+            button.classList.add("active");
+
+            let filter = button.getAttribute("data-filter");
+
+            // Show / hide projects
+            projectCards.forEach(function (card) {
+                let category = card.getAttribute("data-category");
+
+                if (filter === "all" || category === filter) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
         });
     });
 
-    /* Section Reveal */
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('reveal');
-            }
-        });
-    }, { threshold: 0.15 });
 
-    document.querySelectorAll('section, .project-card')
-        .forEach(el => observer.observe(el));
+    // TYPING EFFECT
+    let subtitle = document.querySelector("header h2");
 
-    /* Typing Effect */
-    const subtitle = document.querySelector('header h2');
     if (subtitle) {
-        const text = subtitle.textContent;
-        subtitle.textContent = '';
-        let i = 0;
+        let text = subtitle.innerText;
+        subtitle.innerText = "";
+        let index = 0;
 
-        (function type() {
-            if (i < text.length) {
-                subtitle.textContent += text[i++];
-                setTimeout(type, 80);
+        function typeText() {
+            if (index < text.length) {
+                subtitle.innerText += text[index];
+                index++;
+                setTimeout(typeText, 80);
             }
-        })();
+        }
+
+        typeText();
     }
 
 });
